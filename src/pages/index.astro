@@ -1,50 +1,598 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+// biodatapdf.com - Complete Marriage Biodata Maker with Multi-Step & Cropper
+const title = "Marriage Biodata PDF Maker | Create Professional Biodata Online";
+const description = "Create your marriage biodata in 2 minutes with photo crop, custom templates, and instant A4 PDF download. No login required.";
 ---
 
-<!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<!-- Tailwind CSS CDN -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<!-- jsPDF Library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+		<!-- Cropper.js CSS & JS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+		<script>
+			tailwind.config = {
+				darkMode: 'class',
+				theme: {
+					extend: {
+						fontFamily: {
+							sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+						},
+					}
+				}
+			}
+		</script>
+		<style>
+			.fluid-bg {
+				background: linear-gradient(-45deg, #0f172a, #1e1b4b, #311042, #090d16);
+				background-size: 400% 400%;
+				animation: gradientShift 15s ease infinite;
+			}
+			@keyframes gradientShift {
+				0% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+				100% { background-position: 0% 50%; }
+			}
+			.glass-panel {
+				background: rgba(30, 41, 59, 0.75);
+				backdrop-filter: blur(14px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+			}
+			.dropdown:hover .dropdown-menu {
+				display: block;
+			}
+		</style>
 	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+	<body class="fluid-bg text-slate-100 min-h-screen font-sans antialiased selection:bg-rose-500 selection:text-white">
+
+		<!-- Header / SEO Navigation Menu -->
+		<header class="border-b border-slate-800/80 sticky top-0 z-50 glass-panel">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+				<div class="flex items-center space-x-6">
+					<div class="flex items-center space-x-3">
+						<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/20 font-bold text-lg text-white">
+							BP
+						</div>
+						<span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-rose-300 bg-clip-text text-transparent">
+							BiodataPDF<span class="text-rose-500">.com</span>
+						</span>
+					</div>
+
+					<!-- High Search Volume SEO Sub-Menu -->
+					<nav class="hidden lg:flex items-center space-x-4 text-xs font-medium text-slate-300">
+						<div class="relative dropdown">
+							<button class="flex items-center space-x-1 hover:text-rose-400 py-2 transition-colors">
+								<span>Templates by Community</span>
+								<span class="text-[10px]">▼</span>
+							</button>
+							<div class="dropdown-menu absolute top-full left-0 hidden w-48 py-2 bg-slate-900 border border-slate-800 rounded-xl shadow-xl">
+								<a href="#builder" class="block px-4 py-2 hover:bg-slate-800 hover:text-rose-400">Tamil Biodata PDF</a>
+								<a href="#builder" class="block px-4 py-2 hover:bg-slate-800 hover:text-rose-400">Hindu Marriage Biodata</a>
+								<a href="#builder" class="block px-4 py-2 hover:bg-slate-800 hover:text-rose-400">Telugu Pellikuthuru/Pellikoduku</a>
+								<a href="#builder" class="block px-4 py-2 hover:bg-slate-800 hover:text-rose-400">Muslim Nikah Biodata</a>
+								<a href="#builder" class="block px-4 py-2 hover:bg-slate-800 hover:text-rose-400">Christian Wedding Biodata</a>
+							</div>
+						</div>
+						<a href="#templates" class="hover:text-rose-400 transition-colors">Styles</a>
+						<a href="#pricing" class="hover:text-rose-400 transition-colors">Pricing</a>
+					</nav>
+				</div>
+				<div>
+					<a href="#builder" class="px-4 py-2 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-500 rounded-xl shadow-lg shadow-rose-600/30 transition-all">
+						Create Free
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- Hero Section -->
+		<section class="relative pt-12 pb-8 text-center px-4 max-w-4xl mx-auto">
+			<div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold mb-4">
+				<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+				<span>100% Client-Side Privacy • Built-in Photo Cropper</span>
+			</div>
+			<h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+				Create Professional Marriage Biodata <br />
+				<span class="bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">
+					with Photo & Multi-Step Ease
+				</span>
+			</h1>
+		</section>
+
+		<!-- Main Builder Section -->
+		<main id="builder" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+				
+				<!-- Left Column: Multi-Step Form -->
+				<div class="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl">
+					
+					<!-- Step Progress Bar -->
+					<div class="flex items-center justify-between mb-8 border-b border-slate-700/60 pb-4">
+						<div class="flex items-center space-x-2">
+							<span id="stepIndicator" class="w-7 h-7 rounded-full bg-rose-600 text-white font-bold flex items-center justify-center text-xs">1</span>
+							<h3 id="stepTitle" class="text-sm font-bold text-white uppercase tracking-wider">Personal Information</h3>
+						</div>
+						<span class="text-xs text-slate-400">Step <span id="currentStepNum">1</span> of 4</span>
+					</div>
+
+					<form id="biodataForm" class="space-y-6">
+						
+						<!-- STEP 1: Personal Details -->
+						<div class="form-step space-y-4" data-step="1">
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Full Name *</label>
+									<input type="text" id="fullName" value="Rahul Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" required />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Date of Birth</label>
+									<input type="text" id="dob" value="15 June 1998" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Time of Birth</label>
+									<input type="text" id="tob" value="10:30 AM" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Place of Birth</label>
+									<input type="text" id="pob" value="Chennai, India" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Height & Complexion</label>
+									<input type="text" id="height" value="5'11\" • Fair" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Religion / Caste</label>
+									<input type="text" id="religion" value="Hindu • Brahmin" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+							</div>
+						</div>
+
+						<!-- STEP 2: Education & Career -->
+						<div class="form-step hidden space-y-4" data-step="2">
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Highest Education</label>
+									<input type="text" id="education" value="B.Tech (IIT Madras)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Occupation / Job</label>
+									<input type="text" id="occupation" value="Senior Software Engineer" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Annual Income</label>
+									<input type="text" id="income" value="18 LPA" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Company / Location</label>
+									<input type="text" id="workLocation" value="Bangalore / Chennai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+							</div>
+						</div>
+
+						<!-- STEP 3: Family Background -->
+						<div class="form-step hidden space-y-4" data-step="3">
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Father's Name & Job</label>
+									<input type="text" id="father" value="Mr. Ramesh Sharma (Business)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Mother's Name & Job</label>
+									<input type="text" id="mother" value="Mrs. Sunita Sharma (Homemaker)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Siblings</label>
+									<input type="text" id="siblings" value="1 Younger Sister (Married)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Native Place</label>
+									<input type="text" id="native" value="Madurai, Tamil Nadu" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+								</div>
+							</div>
+						</div>
+
+						<!-- STEP 4: Photo Cropper & Contact -->
+						<div class="form-step hidden space-y-4" data-step="4">
+							<div class="space-y-4">
+								<div>
+									<label class="block text-xs font-medium text-slate-300 mb-1">Upload Profile Photo</label>
+									<input type="file" id="imageInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-500/10 file:text-rose-300 hover:file:bg-rose-500/20 cursor-pointer" />
+								</div>
+
+								<!-- Cropper Container Modal/Box -->
+								<div id="cropperContainer" class="hidden space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+									<div class="max-h-64 overflow-hidden">
+										<img id="imageToCrop" class="max-w-full block" />
+									</div>
+									<button type="button" id="cropBtn" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl transition-all">
+										Crop & Apply Photo
+									</button>
+								</div>
+
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+									<div>
+										<label class="block text-xs font-medium text-slate-300 mb-1">Mobile / WhatsApp</label>
+										<input type="text" id="phone" value="+91 98765 43210" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+									</div>
+									<div>
+										<label class="block text-xs font-medium text-slate-300 mb-1">Residential Address</label>
+										<input type="text" id="address" value="T. Nagar, Chennai, Tamil Nadu" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-rose-500" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Step Navigation Buttons -->
+						<div class="flex items-center justify-between pt-4 border-t border-slate-700/60">
+							<button type="button" id="prevBtn" class="px-5 py-2.5 text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl transition-all disabled:opacity-40" disabled>
+								← Previous
+							</button>
+							<button type="button" id="nextBtn" class="px-6 py-2.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 rounded-xl shadow-lg shadow-rose-600/30 transition-all">
+								Next Step →
+							</button>
+						</div>
+
+					</form>
+				</div>
+
+				<!-- Right Column: Live A4 Preview & PDF Download -->
+				<div class="lg:col-span-5 sticky top-24 space-y-6">
+					<div class="glass-panel rounded-3xl p-6 shadow-2xl border border-slate-700/80">
+						<div class="flex items-center justify-between mb-4">
+							<h3 class="text-lg font-bold text-white flex items-center space-x-2">
+								<span>👁️</span>
+								<span>Live A4 Preview</span>
+							</h3>
+							<span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Print Ready</span>
+						</div>
+
+						<!-- Preview Card -->
+						<div id="biodataPreviewCard" class="bg-white text-slate-900 rounded-2xl p-6 shadow-inner font-sans border border-slate-200 relative overflow-hidden">
+							<div class="flex items-start justify-between border-b border-rose-200 pb-4">
+								<div>
+									<div class="text-[10px] font-semibold text-rose-600 uppercase tracking-widest mb-1">॥ Shri Ganeshaya Namah ॥</div>
+									<h2 id="prevName" class="text-xl font-bold text-slate-900">Rahul Sharma</h2>
+									<p id="prevReligion" class="text-[11px] text-slate-600 mt-0.5">Hindu • Brahmin</p>
+								</div>
+								<div id="previewPhotoBox" class="w-16 h-20 bg-slate-100 border border-rose-200 rounded-lg overflow-hidden flex items-center justify-center text-slate-400 text-[10px] shadow-sm">
+									<span id="photoPlaceholder">Photo</span>
+									<img id="previewCroppedImg" class="w-full h-full object-cover hidden" />
+								</div>
+							</div>
+
+							<div class="space-y-3 pt-3 text-[11px]">
+								<div>
+									<h4 class="font-bold text-rose-700 uppercase tracking-wider border-b border-rose-100 pb-0.5 mb-1">Personal Info</h4>
+									<div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-slate-700">
+										<p><strong>DOB:</strong> <span id="prevDob">15 June 1998</span></p>
+										<p><strong>Time:</strong> <span id="prevTob">10:30 AM</span></p>
+										<p><strong>Birth Place:</strong> <span id="prevPob">Chennai, India</span></p>
+										<p><strong>Height:</strong> <span id="prevHeight">5'11" • Fair</span></p>
+									</div>
+								</div>
+
+								<div>
+									<h4 class="font-bold text-rose-700 uppercase tracking-wider border-b border-rose-100 pb-0.5 mb-1">Education & Career</h4>
+									<div class="grid grid-cols-1 gap-y-0.5 text-slate-700">
+										<p><strong>Education:</strong> <span id="prevEdu">B.Tech (IIT Madras)</span></p>
+										<p><strong>Occupation:</strong> <span id="prevOcc">Senior Software Engineer (18 LPA)</span></p>
+									</div>
+								</div>
+
+								<div>
+									<h4 class="font-bold text-rose-700 uppercase tracking-wider border-b border-rose-100 pb-0.5 mb-1">Family Details</h4>
+									<div class="grid grid-cols-1 gap-y-0.5 text-slate-700">
+										<p><strong>Father:</strong> <span id="prevFather">Mr. Ramesh Sharma (Business)</span></p>
+										<p><strong>Mother:</strong> <span id="prevMother">Mrs. Sunita Sharma (Homemaker)</span></p>
+									</div>
+								</div>
+
+								<div>
+									<h4 class="font-bold text-rose-700 uppercase tracking-wider border-b border-rose-100 pb-0.5 mb-1">Contact</h4>
+									<div class="grid grid-cols-1 gap-y-0.5 text-slate-700">
+										<p><strong>Phone:</strong> <span id="prevPhone">+91 98765 43210</span></p>
+										<p><strong>Address:</strong> <span id="prevAddress">T. Nagar, Chennai, TN</span></p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="mt-6">
+							<button id="downloadPdfBtn" class="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center space-x-2 text-sm">
+								<span>📥</span>
+								<span>Download Print-Ready PDF</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
 		</main>
-		<Footer />
+
+		<!-- Templates & Pricing Section -->
+		<section id="templates" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-800">
+			<div class="text-center max-w-2xl mx-auto mb-12">
+				<h2 class="text-2xl sm:text-3xl font-bold text-white mb-3">Choose Your Perfect Template</h2>
+				<p class="text-sm text-slate-400">Available in traditional, modern minimalist, and community-specific formats.</p>
+			</div>
+			<div id="pricing" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<!-- Free Plan -->
+				<div class="glass-panel rounded-3xl p-6 border border-slate-700/80 flex flex-col justify-between">
+					<div>
+						<h3 class="text-lg font-bold text-white mb-1">Basic Free</h3>
+						<p class="text-xs text-slate-400 mb-4">Great for quick sharing on WhatsApp.</p>
+						<div class="text-2xl font-extrabold text-white mb-6">₹0 <span class="text-xs text-slate-400 font-normal">/ forever</span></div>
+						<ul class="space-y-3 text-xs text-slate-300 mb-8">
+							<li class="flex items-center space-x-2"><span>✓</span><span>Instant A4 PDF Download</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>Built-in Photo Crop</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>No Login Required</span></li>
+						</ul>
+					</div>
+					<a href="#builder" class="w-full py-2.5 text-center text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-all">Get Started Free</a>
+				</div>
+				<!-- Pro Gold Plan -->
+				<div class="glass-panel rounded-3xl p-6 border-2 border-rose-500/50 flex flex-col justify-between relative shadow-xl shadow-rose-600/10">
+					<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-rose-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wider">Most Popular</div>
+					<div>
+						<h3 class="text-lg font-bold text-white mb-1">Pro Gold Pass</h3>
+						<p class="text-xs text-slate-400 mb-4">Unlock premium decorative borders & horoscope integration.</p>
+						<div class="text-2xl font-extrabold text-rose-400 mb-6">₹99 <span class="text-xs text-slate-400 font-normal">/ one-time</span></div>
+						<ul class="space-y-3 text-xs text-slate-300 mb-8">
+							<li class="flex items-center space-x-2"><span>✓</span><span>All 50+ Premium Templates</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>Horoscope / Kundali Grid Section</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>Watermark-free HD Export</span></li>
+						</ul>
+					</div>
+					<a href="#builder" class="w-full py-2.5 text-center text-xs font-semibold text-white bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 rounded-xl transition-all shadow-lg shadow-rose-600/20">Upgrade Now</a>
+				</div>
+				<!-- Multi-Language Edition -->
+				<div class="glass-panel rounded-3xl p-6 border border-slate-700/80 flex flex-col justify-between">
+					<div>
+						<h3 class="text-lg font-bold text-white mb-1">Regional Language</h3>
+						<p class="text-xs text-slate-400 mb-4">Tamil, Telugu, Malayalam, Hindi & Marathi layouts.</p>
+						<div class="text-2xl font-extrabold text-white mb-6">₹49 <span class="text-xs text-slate-400 font-normal">/ one-time</span></div>
+						<ul class="space-y-3 text-xs text-slate-300 mb-8">
+							<li class="flex items-center space-x-2"><span>✓</span><span>Regional Language Fonts</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>Traditional Greeting Headers</span></li>
+							<li class="flex items-center space-x-2"><span>✓</span><span>Instant PDF Generation</span></li>
+						</ul>
+					</div>
+					<a href="#builder" class="w-full py-2.5 text-center text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-all">Select Language</a>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer with Essential Links -->
+		<footer class="border-t border-slate-800 bg-slate-950/80 py-12 text-xs text-slate-400">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+				<div>
+					<h4 class="font-bold text-white uppercase tracking-wider mb-3">BiodataPDF.com</h4>
+					<p class="text-slate-500 leading-relaxed">The fastest, most secure client-side marriage biodata generator designed for modern matchmaking.</p>
+				</div>
+				<div>
+					<h4 class="font-bold text-white uppercase tracking-wider mb-3">Popular Formats</h4>
+					<ul class="space-y-2">
+						<li><a href="#builder" class="hover:text-rose-400">Tamil Marriage Biodata</a></li>
+						<li><a href="#builder" class="hover:text-rose-400">Hindu Brahmin Biodata</a></li>
+						<li><a href="#builder" class="hover:text-rose-400">Telugu Pellikuthuru PDF</a></li>
+						<li><a href="#builder" class="hover:text-rose-400">Modern Minimalist Layout</a></li>
+					</ul>
+				</div>
+				<div>
+					<h4 class="font-bold text-white uppercase tracking-wider mb-3">Legal & Privacy</h4>
+					<ul class="space-y-2">
+						<li><a href="#" class="hover:text-rose-400">Privacy Policy</a></li>
+						<li><a href="#" class="hover:text-rose-400">Terms of Service</a></li>
+						<li><a href="#" class="hover:text-rose-400">Disclaimer</a></li>
+					</ul>
+				</div>
+				<div>
+					<h4 class="font-bold text-white uppercase tracking-wider mb-3">Support</h4>
+					<ul class="space-y-2">
+						<li><a href="#" class="hover:text-rose-400">Contact Us</a></li>
+						<li><a href="#" class="hover:text-rose-400">FAQ & Guide</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-900 pt-6 text-center text-slate-500">
+				<p>© 2026 BiodataPDF.com. All rights reserved. 100% Client-Side Privacy Guaranteed.</p>
+			</div>
+		</footer>
+
+		<!-- Script Logic: Multi-Step Form, Cropper.js & jsPDF -->
+		<script>
+			// Multi-Step Form State Machine
+			let currentStep = 1;
+			const totalSteps = 4;
+			const steps = document.querySelectorAll('.form-step');
+			const stepIndicator = document.getElementById('stepIndicator');
+			const stepTitle = document.getElementById('stepTitle');
+			const currentStepNum = document.getElementById('currentStepNum');
+			const prevBtn = document.getElementById('prevBtn');
+			const nextBtn = document.getElementById('nextBtn');
+
+			const stepNames = [
+				"Personal Information",
+				"Education & Career",
+				"Family Background",
+				"Photo & Contact Details"
+			];
+
+			function updateStepView() {
+				steps.forEach((el, index) => {
+					if (index + 1 === currentStep) {
+						el.classList.remove('hidden');
+					} else {
+						el.classList.add('hidden');
+					}
+				});
+				stepIndicator.textContent = currentStep;
+				stepTitle.textContent = stepNames[currentStep - 1];
+				currentStepNum.textContent = currentStep;
+
+				prevBtn.disabled = currentStep === 1;
+				nextBtn.textContent = currentStep === totalSteps ? 'Finish & Preview' : 'Next Step →';
+			}
+
+			nextBtn.addEventListener('click', () => {
+				if (currentStep < totalSteps) {
+					currentStep++;
+					updateStepView();
+				}
+			});
+
+			prevBtn.addEventListener('click', () => {
+				if (currentStep > 1) {
+					currentStep--;
+					updateStepView();
+				}
+			});
+
+			// Live Text Syncing
+			const bindings = {
+				fullName: { input: document.getElementById('fullName'), prev: document.getElementById('prevName') },
+				dob: { input: document.getElementById('dob'), prev: document.getElementById('prevDob') },
+				tob: { input: document.getElementById('tob'), prev: document.getElementById('prevTob') },
+				pob: { input: document.getElementById('pob'), prev: document.getElementById('prevPob') },
+				height: { input: document.getElementById('height'), prev: document.getElementById('prevHeight') },
+				religion: { input: document.getElementById('religion'), prev: document.getElementById('prevReligion') },
+				education: { input: document.getElementById('education'), prev: document.getElementById('prevEdu') },
+				occupation: { input: document.getElementById('occupation'), prev: document.getElementById('prevOcc') },
+				father: { input: document.getElementById('father'), prev: document.getElementById('prevFather') },
+				mother: { input: document.getElementById('mother'), prev: document.getElementById('prevMother') },
+				phone: { input: document.getElementById('phone'), prev: document.getElementById('prevPhone') },
+				address: { input: document.getElementById('address'), prev: document.getElementById('prevAddress') },
+			};
+
+			Object.keys(bindings).forEach(k => {
+				bindings[k].input.addEventListener('input', (e) => {
+					bindings[k].prev.textContent = e.target.value || '-';
+				});
+			});
+
+			// Cropper.js Integration
+			let cropper = null;
+			const imageInput = document.getElementById('imageInput');
+			const cropperContainer = document.getElementById('cropperContainer');
+			const imageToCrop = document.getElementById('imageToCrop');
+			const cropBtn = document.getElementById('cropBtn');
+			const photoPlaceholder = document.getElementById('photoPlaceholder');
+			const previewCroppedImg = document.getElementById('previewCroppedImg');
+			let croppedDataUrl = null;
+
+			imageInput.addEventListener('change', (e) => {
+				const files = e.target.files;
+				if (files && files.length > 0) {
+					const file = files[0];
+					const reader = new FileReader();
+					reader.onload = (event) => {
+						imageToCrop.src = event.target.result;
+						cropperContainer.classList.remove('hidden');
+						if (cropper) cropper.destroy();
+						cropper = new Cropper(imageToCrop, {
+							aspectRatio: 3 / 4,
+							viewMode: 1,
+						});
+					};
+					reader.readAsDataURL(file);
+				}
+			});
+
+			cropBtn.addEventListener('click', () => {
+				if (cropper) {
+					const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 });
+					croppedDataUrl = canvas.toDataURL('image/jpeg');
+					previewCroppedImg.src = croppedDataUrl;
+					previewCroppedImg.classList.remove('hidden');
+					photoPlaceholder.classList.add('hidden');
+					cropperContainer.classList.add('hidden');
+				}
+			});
+
+			// PDF Generation via jsPDF
+			document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+				const { jsPDF } = window.jspdf;
+				const doc = new jsPDF('p', 'mm', 'a4');
+
+				doc.setFont("Helvetica", "bold");
+				doc.setFontSize(10);
+				doc.setTextColor(180, 50, 50);
+				doc.text("|| Shri Ganeshaya Namah ||", 105, 18, { align: "center" });
+
+				doc.setFontSize(22);
+				doc.setTextColor(20, 20, 20);
+				doc.text(bindings.fullName.input.value || "Marriage Biodata", 105, 26, { align: "center" });
+
+				doc.setFontSize(10);
+				doc.setFont("Helvetica", "normal");
+				doc.setTextColor(100, 100, 100);
+				doc.text(bindings.religion.input.value, 105, 32, { align: "center" });
+
+				// Add Cropped Photo to PDF if available
+				if (croppedDataUrl) {
+					doc.addImage(croppedDataUrl, 'JPEG', 165, 15, 30, 40);
+				}
+
+				let y = 44;
+				function addSec(title, dataObj) {
+					doc.setFont("Helvetica", "bold");
+					doc.setFontSize(11);
+					doc.setTextColor(180, 50, 50);
+					doc.text(title, 20, y);
+					doc.setDrawColor(220, 200, 200);
+					doc.line(20, y + 2, 190, y + 2);
+					y += 7;
+					doc.setFont("Helvetica", "normal");
+					doc.setFontSize(10);
+					doc.setTextColor(40, 40, 40);
+
+					Object.keys(dataObj).forEach(label => {
+						doc.setFont("Helvetica", "bold");
+						doc.text(label + ":", 20, y);
+						doc.setFont("Helvetica", "normal");
+						doc.text(dataObj[label], 55, y);
+						y += 5.5;
+					});
+					y += 3;
+				}
+
+				addSec("Personal Information", {
+					"Date of Birth": bindings.dob.input.value,
+					"Time of Birth": bindings.tob.input.value,
+					"Birth Place": bindings.pob.input.value,
+					"Height": bindings.height.input.value
+				});
+
+				addSec("Education & Career", {
+					"Highest Education": bindings.education.input.value,
+					"Occupation": bindings.occupation.input.value
+				});
+
+				addSec("Family Background", {
+					"Father's Details": bindings.father.input.value,
+					"Mother's Details": bindings.mother.input.value
+				});
+
+				addSec("Contact Details", {
+					"Mobile / WhatsApp": bindings.phone.input.value,
+					"Residential Address": bindings.address.input.value
+				});
+
+				doc.setFontSize(8);
+				doc.setTextColor(150, 150, 150);
+				doc.text("Generated securely via Biodatapdf.com", 105, 285, { align: "center" });
+
+				doc.save(`${(bindings.fullName.input.value || 'Marriage_Biodata').replace(/\s+/g, '_')}_Biodata.pdf`);
+			});
+		</script>
 	</body>
 </html>
